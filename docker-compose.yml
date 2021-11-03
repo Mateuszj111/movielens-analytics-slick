@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+
+  db:
+    build: ./db
+    container_name: movielens-postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+
+  movielens-analytics:
+    build: .
+    command: bash -c "cd /app && sbt run"
+    environment:
+      - DATABASE_URL=jdbc:postgresql://db:5432/postgres
+      - USER=postgres
+      - PASSWORD=postgres
+    depends_on:
+      - db
